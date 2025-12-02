@@ -1,0 +1,15 @@
+[
+  {
+    "Name": "Nuevo perfil",
+    "Projects": [
+      {
+        "Path": "Gestion_Tareas_API\\Gestion_Tareas_API.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "Gestion_Tareas_Client\\Gestion_Tareas_Client.csproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]

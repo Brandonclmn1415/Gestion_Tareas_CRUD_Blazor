@@ -1,0 +1,123 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\Proyectos_C#\\GestionDeTareas\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{68E5C118-27A1-4228-83BA-31964A397F14}|Gestion_Tareas_Client\\Gestion_Tareas_Client.csproj|d:\\proyectos_c#\\gestiondetareas\\gestion_tareas_client\\pages\\tasks\\principal.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{68E5C118-27A1-4228-83BA-31964A397F14}|Gestion_Tareas_Client\\Gestion_Tareas_Client.csproj|solutionrelative:gestion_tareas_client\\pages\\tasks\\principal.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{68E5C118-27A1-4228-83BA-31964A397F14}|Gestion_Tareas_Client\\Gestion_Tareas_Client.csproj|d:\\proyectos_c#\\gestiondetareas\\gestion_tareas_client\\wwwroot\\index.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{68E5C118-27A1-4228-83BA-31964A397F14}|Gestion_Tareas_Client\\Gestion_Tareas_Client.csproj|solutionrelative:gestion_tareas_client\\wwwroot\\index.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{68E5C118-27A1-4228-83BA-31964A397F14}|Gestion_Tareas_Client\\Gestion_Tareas_Client.csproj|d:\\proyectos_c#\\gestiondetareas\\gestion_tareas_client\\wwwroot\\css\\app.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "RelativeMoniker": "D:0:0:{68E5C118-27A1-4228-83BA-31964A397F14}|Gestion_Tareas_Client\\Gestion_Tareas_Client.csproj|solutionrelative:gestion_tareas_client\\wwwroot\\css\\app.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{68E5C118-27A1-4228-83BA-31964A397F14}|Gestion_Tareas_Client\\Gestion_Tareas_Client.csproj|d:\\proyectos_c#\\gestiondetareas\\gestion_tareas_client\\pages\\tasks\\tasklist.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{68E5C118-27A1-4228-83BA-31964A397F14}|Gestion_Tareas_Client\\Gestion_Tareas_Client.csproj|solutionrelative:gestion_tareas_client\\pages\\tasks\\tasklist.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{68E5C118-27A1-4228-83BA-31964A397F14}|Gestion_Tareas_Client\\Gestion_Tareas_Client.csproj|d:\\proyectos_c#\\gestiondetareas\\gestion_tareas_client\\pages\\tasks\\taskcreate.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{68E5C118-27A1-4228-83BA-31964A397F14}|Gestion_Tareas_Client\\Gestion_Tareas_Client.csproj|solutionrelative:gestion_tareas_client\\pages\\tasks\\taskcreate.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{68E5C118-27A1-4228-83BA-31964A397F14}|Gestion_Tareas_Client\\Gestion_Tareas_Client.csproj|d:\\proyectos_c#\\gestiondetareas\\gestion_tareas_client\\pages\\tasks\\taskedit.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{68E5C118-27A1-4228-83BA-31964A397F14}|Gestion_Tareas_Client\\Gestion_Tareas_Client.csproj|solutionrelative:gestion_tareas_client\\pages\\tasks\\taskedit.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 3,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{b1e99781-ab81-11d0-b683-00aa00a3ee26}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "index.html",
+              "DocumentMoniker": "D:\\Proyectos_C#\\GestionDeTareas\\Gestion_Tareas_Client\\wwwroot\\index.html",
+              "RelativeDocumentMoniker": "Gestion_Tareas_Client\\wwwroot\\index.html",
+              "ToolTip": "D:\\Proyectos_C#\\GestionDeTareas\\Gestion_Tareas_Client\\wwwroot\\index.html",
+              "RelativeToolTip": "Gestion_Tareas_Client\\wwwroot\\index.html",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAAAkAAAAwAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
+              "WhenOpened": "2025-11-27T11:01:51.019Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "app.css",
+              "DocumentMoniker": "D:\\Proyectos_C#\\GestionDeTareas\\Gestion_Tareas_Client\\wwwroot\\css\\app.css",
+              "RelativeDocumentMoniker": "Gestion_Tareas_Client\\wwwroot\\css\\app.css",
+              "ToolTip": "D:\\Proyectos_C#\\GestionDeTareas\\Gestion_Tareas_Client\\wwwroot\\css\\app.css",
+              "RelativeToolTip": "Gestion_Tareas_Client\\wwwroot\\css\\app.css",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
+              "WhenOpened": "2025-11-27T10:59:00.518Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Principal.razor",
+              "DocumentMoniker": "D:\\Proyectos_C#\\GestionDeTareas\\Gestion_Tareas_Client\\Pages\\Tasks\\Principal.razor",
+              "RelativeDocumentMoniker": "Gestion_Tareas_Client\\Pages\\Tasks\\Principal.razor",
+              "ToolTip": "D:\\Proyectos_C#\\GestionDeTareas\\Gestion_Tareas_Client\\Pages\\Tasks\\Principal.razor",
+              "RelativeToolTip": "Gestion_Tareas_Client\\Pages\\Tasks\\Principal.razor",
+              "ViewState": "AgIAACcAAAAAAAAAAAAAAAYAAAAmAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-11-27T10:34:41.527Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "TaskList.razor",
+              "DocumentMoniker": "D:\\Proyectos_C#\\GestionDeTareas\\Gestion_Tareas_Client\\Pages\\Tasks\\TaskList.razor",
+              "RelativeDocumentMoniker": "Gestion_Tareas_Client\\Pages\\Tasks\\TaskList.razor",
+              "ToolTip": "D:\\Proyectos_C#\\GestionDeTareas\\Gestion_Tareas_Client\\Pages\\Tasks\\TaskList.razor",
+              "RelativeToolTip": "Gestion_Tareas_Client\\Pages\\Tasks\\TaskList.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAM8AAAAkAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-11-27T10:33:20.463Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "TaskEdit.razor",
+              "DocumentMoniker": "D:\\Proyectos_C#\\GestionDeTareas\\Gestion_Tareas_Client\\Pages\\Tasks\\TaskEdit.razor",
+              "RelativeDocumentMoniker": "Gestion_Tareas_Client\\Pages\\Tasks\\TaskEdit.razor",
+              "ToolTip": "D:\\Proyectos_C#\\GestionDeTareas\\Gestion_Tareas_Client\\Pages\\Tasks\\TaskEdit.razor",
+              "RelativeToolTip": "Gestion_Tareas_Client\\Pages\\Tasks\\TaskEdit.razor",
+              "ViewState": "AgIAAE4AAAAAAAAAAAAAAPEAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-11-27T10:27:39.576Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "TaskCreate.razor",
+              "DocumentMoniker": "D:\\Proyectos_C#\\GestionDeTareas\\Gestion_Tareas_Client\\Pages\\Tasks\\TaskCreate.razor",
+              "RelativeDocumentMoniker": "Gestion_Tareas_Client\\Pages\\Tasks\\TaskCreate.razor",
+              "ToolTip": "D:\\Proyectos_C#\\GestionDeTareas\\Gestion_Tareas_Client\\Pages\\Tasks\\TaskCreate.razor",
+              "RelativeToolTip": "Gestion_Tareas_Client\\Pages\\Tasks\\TaskCreate.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAFUAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-11-27T10:25:08.299Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

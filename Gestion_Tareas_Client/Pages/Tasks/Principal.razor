@@ -1,0 +1,282 @@
+﻿@page "/"
+@using Gestion_Tareas.Shared.Models
+@using Gestion_Tareas_API.Services.Interfaces
+@inject NavigationManager Nav
+@inject ITaskService TaskService
+
+<div class="dashboard-container py-5">
+    <div class="text-center mb-5 fade-in-up">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <h1 class="display-4 fw-bold dashboard-header mb-3">
+                    <i class="fas fa-tasks me-3"></i>Gestión de Tareas
+                </h1>
+                <p class="lead fs-5 mb-4">
+                    Organiza, prioriza y completa tus tareas de manera eficiente y profesional
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+
+        @if (taskStats != null)
+        {
+            <div class="row g-4 mb-5 fade-in-up" style="animation-delay: 0.2s;">
+                <div class="col-md-3">
+                    <div class="stat-card pending h-100 text-center p-4">
+                        <div class="stat-icon text-warning">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <h3 class="stat-number text-warning">@taskStats.Pending</h3>
+                        <p class="text-muted mb-1 fw-semibold">Pendientes</p>
+                        <small class="text-muted">Tareas por hacer</small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card in-progress h-100 text-center p-4">
+                        <div class="stat-icon text-info">
+                            <i class="fas fa-sync-alt"></i>
+                        </div>
+                        <h3 class="stat-number text-info">@taskStats.InProgress</h3>
+                        <p class="text-muted mb-1 fw-semibold">En Progreso</p>
+                        <small class="text-muted">En desarrollo</small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card completed h-100 text-center p-4">
+                        <div class="stat-icon text-success">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <h3 class="stat-number text-success">@taskStats.Completed</h3>
+                        <p class="text-muted mb-1 fw-semibold">Completadas</p>
+                        <small class="text-muted">Tareas finalizadas</small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card total h-100 text-center p-4">
+                        <div class="stat-icon text-primary">
+                            <i class="fas fa-list-check"></i>
+                        </div>
+                        <h3 class="stat-number text-primary">@taskStats.Total</h3>
+                        <p class="text-muted mb-1 fw-semibold">Total Tareas</p>
+                        <small class="text-muted">En el sistema</small>
+                    </div>
+                </div>
+            </div>
+        }
+
+
+        <div class="row g-4 mb-5 fade-in-up" style="animation-delay: 0.4s;">
+
+            <div class="col-lg-4">
+                <div class="action-card h-100 text-center p-4"
+                     @onclick="NavigateToTasksList"
+                     style="cursor: pointer;">
+                    <div class="action-icon">
+                        <i class="fas fa-list-ol"></i>
+                    </div>
+                    <h4 class="action-title">Ver Todas las Tareas</h4>
+                    <p class="action-description">
+                        Explora y gestiona todas tus tareas en una vista completa y organizada con filtros avanzados
+                    </p>
+                    <div class="d-grid">
+                        <button class="btn btn-primary btn-lg btn-glow">
+                            <i class="fas fa-arrow-right me-2"></i>Acceder al Listado
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-lg-4">
+                <div class="action-card h-100 text-center p-4"
+                     @onclick="NavigateToCreateTask"
+                     style="cursor: pointer;">
+                    <div class="action-icon">
+                        <i class="fas fa-plus-circle"></i>
+                    </div>
+                    <h4 class="action-title">Crear Nueva Tarea</h4>
+                    <p class="action-description">
+                        Agrega una nueva tarea con título, descripción detallada, fecha de vencimiento y prioridad
+                    </p>
+                    <div class="d-grid">
+                        <button class="btn btn-success btn-lg btn-glow">
+                            <i class="fas fa-plus me-2"></i>Crear Tarea
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-lg-4">
+                <div class="action-card h-100 text-center p-4"
+                     @onclick="NavigateToTasks"
+                     style="cursor: pointer;">
+                    <div class="action-icon">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <h4 class="action-title">Gestión Rápida</h4>
+                    <p class="action-description">
+                        Acceso directo al panel principal de gestión con todas las funcionalidades integradas
+                    </p>
+                    <div class="d-grid">
+                        <button class="btn btn-info btn-lg btn-glow text-white">
+                            <i class="fas fa-play me-2"></i>Comenzar Ahora
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        @if (recentTasks != null && recentTasks.Any())
+        {
+            <div class="fade-in-up" style="animation-delay: 0.6s;">
+                <div class="recent-tasks-card p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h4 class="text-dark mb-0">
+                            <i class="fas fa-clock me-2 text-primary"></i>Tareas Recientes
+                        </h4>
+                        <span class="badge bg-primary fs-6">
+                            <i class="fas fa-tasks me-1"></i>@recentTasks.Count Tareas
+                        </span>
+                    </div>
+
+                    <div class="row g-4">
+                        @foreach (var task in recentTasks.Take(3))
+                        {
+                            <div class="col-md-4">
+                                <div class="task-card p-3 h-100">
+                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                        <h6 class="task-title text-truncate flex-grow-1" title="@task.Title">
+                                            @task.Title
+                                        </h6>
+                                        <span class="badge @GetStatusBadgeClass(task.Status) ms-2">
+                                            @GetStatusText(task.Status)
+                                        </span>
+                                    </div>
+                                    <p class="small text-muted mb-3">
+                                        @GetTaskDescriptionPreview(task.Description)
+                                    </p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <small class="text-muted">
+                                            <i class="fas fa-calendar me-1 @GetDueDateClass(task.DueDate)"></i>
+                                            <span class="@GetDueDateClass(task.DueDate)">
+                                                @task.DueDate.ToString("dd/MM/yyyy")
+                                            </span>
+                                        </small>
+                                        <button class="btn btn-outline-primary btn-sm btn-glow"
+                                                @onclick='() => Nav.NavigateTo($"/tasks/edit/{task.Id}")'
+                                                title="Editar tarea">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+
+                    @if (recentTasks.Count > 3)
+                    {
+                        <div class="text-center mt-4">
+                            <button class="btn btn-outline-primary btn-glow" @onclick="NavigateToTasksList">
+                                <i class="fas fa-list me-2"></i>Ver todas las @recentTasks.Count tareas
+                            </button>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+
+
+        <div class="text-center mt-5 pt-4 fade-in-up" style="animation-delay: 0.8s;">
+            <div class="dashboard-glass p-4">
+                <p class="text-muted mb-0">
+                    <i class="fas fa-info-circle me-2 text-primary"></i>
+                    Sistema de Gestión de Tareas •
+                    <strong class="text-dark">@DateTime.Now.Year</strong> •
+                    <i class="fas fa-heart text-danger mx-1"></i>
+                    Desarrollado con Blazor WebAssembly
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private List<TaskItem>? recentTasks;
+    private TaskStats? taskStats;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadDashboardData();
+    }
+
+    private async Task LoadDashboardData()
+    {
+        var allTasks = (await TaskService.GetAllTasksAsync()).ToList();
+
+        taskStats = new TaskStats
+        {
+            Total = allTasks.Count,
+            Pending = allTasks.Count(t => t.Status == 0),
+            InProgress = allTasks.Count(t => t.Status == 1),
+            Completed = allTasks.Count(t => t.Status == 2)
+        };
+
+        recentTasks = allTasks
+            .OrderByDescending(t => t.DueDate)
+            .ThenBy(t => t.Status)
+            .ToList();
+    }
+
+    private void NavigateToTasksList() => Nav.NavigateTo("/tasks/list");
+    private void NavigateToCreateTask() => Nav.NavigateTo("/tasks/create");
+    private void NavigateToTasks() => Nav.NavigateTo("/tasks");
+
+    private string GetStatusBadgeClass(int status)
+    {
+        return status switch
+        {
+            0 => "bg-warning text-dark",
+            1 => "bg-info text-white",
+            2 => "bg-success text-white",
+            _ => "bg-secondary text-white"
+        };
+    }
+
+    private string GetStatusText(int status)
+    {
+        return status switch
+        {
+            0 => "Pendiente",
+            1 => "En Progreso",
+            2 => "Completada",
+            _ => "Desconocido"
+        };
+    }
+
+    private string GetTaskDescriptionPreview(string? description)
+    {
+        if (string.IsNullOrEmpty(description))
+            return "📝 Sin descripción disponible";
+
+        return description.Length > 100 ? description[..100] + "..." : description;
+    }
+
+    private string GetDueDateClass(DateTime dueDate)
+    {
+        if (dueDate < DateTime.Today) return "text-danger fw-bold";
+        if (dueDate == DateTime.Today) return "text-warning fw-bold";
+        return "text-muted";
+    }
+
+    private class TaskStats
+    {
+        public int Total { get; set; }
+        public int Pending { get; set; }
+        public int InProgress { get; set; }
+        public int Completed { get; set; }
+    }
+}
