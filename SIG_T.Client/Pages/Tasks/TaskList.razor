@@ -1,0 +1,369 @@
+﻿@page "/tasks/list"
+@using SIG_T.Shared.Models
+@using SIG_T.Client.Services.Interfaces
+@inject NavigationManager Nav
+@inject ITaskService TaskService
+@inject HttpClient Http
+
+<div class="container-fluid py-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="h3 fw-bold text-primary mb-1">
+                <i class="fas fa-list-check me-2"></i>Lista de Tareas
+            </h2>
+            <p class="text-muted mb-0">Visualiza y gestiona todas tus tareas</p>
+        </div>
+        <div class="d-flex gap-2">
+            <button class="btn btn-success btn-lg" @onclick="GenerateReport">
+                <i class="fas fa-file-alt me-2"></i>Generar Reporte
+            </button>
+            <button class="btn btn-primary btn-lg" @onclick='() => Nav.NavigateTo("/tasks/create")'>
+                <i class="fas fa-plus-circle me-2"></i>Nueva Tarea
+            </button>
+        </div>
+    </div>
+
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Filtrar por estado:</label>
+                    <InputSelect class="form-select" @bind-Value="selectedStatus" @onchange="FilterTasks">
+                        <option value="">📋 Todas las tareas</option>
+                        <option value="0">⏳ Pendiente</option>
+                        <option value="1">🔄 En Progreso</option>
+                        <option value="2">✅ Completada</option>
+                    </InputSelect>
+                </div>
+                <div class="col-md-6 text-end">
+                    <small class="text-muted">
+                        Mostrando <strong>@(tasks?.Count ?? 0)</strong> tarea(s)
+                        @if (!string.IsNullOrEmpty(selectedStatus))
+                        {
+                            <span> - Filtrado por: <strong>@GetCurrentFilterText()</strong></span>
+                        }
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+  
+    @if (tasks == null)
+    {
+
+        <div class="card shadow-sm">
+            <div class="card-body text-center py-5">
+                <div class="spinner-border text-primary mb-3" role="status"></div>
+                <p class="text-muted">Cargando tareas...</p>
+            </div>
+        </div>
+    }
+    else if (!tasks.Any())
+    {
+ 
+        <div class="card shadow-sm border-0">
+            <div class="card-body text-center py-5">
+                <i class="fas fa-clipboard-list fa-3x text-muted mb-3"></i>
+                <h4 class="text-muted">No hay tareas</h4>
+                <p class="text-muted mb-4">
+                    @if (!string.IsNullOrEmpty(selectedStatus))
+                    {
+                        <span>No hay tareas con el estado seleccionado</span>
+                    }
+                    else
+                    {
+                        <span>Comienza creando tu primera tarea</span>
+                    }
+                </p>
+                <button class="btn btn-primary" @onclick='() => Nav.NavigateTo("/tasks/create")'>
+                    <i class="fas fa-plus me-2"></i>Crear Nueva Tarea
+                </button>
+                @if (!string.IsNullOrEmpty(selectedStatus))
+                {
+                    <button class="btn btn-outline-secondary ms-2" @onclick="ClearFilter">
+                        <i class="fas fa-times me-2"></i>Limpiar Filtro
+                    </button>
+                }
+            </div>
+        </div>
+    }
+    else
+    {
+
+        <div class="card shadow-sm">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="ps-4">Título</th>
+                                <th>Descripción</th>
+                                <th>Vence</th>
+                                <th>Estado</th>
+                                <th class="text-end pe-4">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var task in tasks)
+                            {
+                                <tr class="@GetTaskRowClass(task)">
+                                    <td class="ps-4">
+                                        <div class="fw-semibold text-dark">@task.Title</div>
+                                        @if (IsTaskOverdue(task))
+                                        {
+                                            <small class="text-danger">
+                                                <i class="fas fa-exclamation-triangle me-1"></i>Vencida
+                                            </small>
+                                        }
+                                </td>
+                                <td>
+                                    <span class="text-truncate d-inline-block" style="max-width: 200px;"
+                                          title="@task.Description">
+                                        @(string.IsNullOrEmpty(task.Description) ?
+                                                                            "<sin descripción>" : task.Description)
+                                </span>
+                            </td>
+                            <td>
+                                <span class="@GetDueDateClass(task.DueDate)">
+                                    @task.DueDate.ToString("dd/MM/yyyy")
+                                </span>
+                                @if (IsTaskDueToday(task))
+                                        {
+                                            <br>
+                                            <small class="text-warning fw-bold">¡Hoy!</small>
+                                        }
+                                    </td>
+                                    <td>
+                                        <span class="badge @GetStatusBadgeClass(task.Status)">
+                                            @GetStatusText(task.Status)
+                                        </span>
+                                    </td>
+                                    <td class="text-end pe-4">
+                                        <div class="btn-group btn-group-sm" role="group">
+                                            <button class="btn btn-outline-primary"
+                                                    @onclick="() => EditTask(task.Id)"
+                                                    title="Editar tarea">
+                                                <i class="fas fa-edit"></i> Editar
+                                            </button>
+                                            <button class="btn btn-outline-danger"
+                                                    @onclick="() => ShowDeleteConfirmation(task)"
+                                                    title="Eliminar tarea">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+
+@if (showDeleteModal)
+{
+    <div class="modal fade show d-block" style="background-color: rgba(0,0,0,0.5)" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title text-danger">
+                        <i class="fas fa-exclamation-triangle me-2"></i>Confirmar Eliminación
+                    </h5>
+                </div>
+                <div class="modal-body py-4">
+                    <p>¿Estás seguro de que deseas eliminar la tarea <strong>"@taskToDelete?.Title"</strong>?</p>
+                    <p class="text-muted small">Esta acción no se puede deshacer.</p>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-outline-secondary" @onclick="CloseDeleteModal">
+                        <i class="fas fa-times me-2"></i>Cancelar
+                    </button>
+                    <button type="button" class="btn btn-danger" @onclick="ConfirmDelete">
+                        <i class="fas fa-trash me-2"></i>Eliminar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private List<TaskItem>? tasks;
+    private string selectedStatus = "";
+    private bool showDeleteModal = false;
+    private TaskItem? taskToDelete = null;
+    private bool reportInProgress = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadTasks();
+    }
+
+    private async Task LoadTasks()
+    {
+        tasks = (await TaskService.GetAllTasksAsync()).ToList();
+    }
+
+    private void EditTask(int id)
+    {
+        Nav.NavigateTo($"/tasks/edit");
+    }
+
+    private void ShowDeleteConfirmation(TaskItem task)
+    {
+        taskToDelete = task;
+        showDeleteModal = true;
+        StateHasChanged();
+    }
+
+    private void CloseDeleteModal()
+    {
+        showDeleteModal = false;
+        taskToDelete = null;
+        StateHasChanged();
+    }
+
+    private async Task ConfirmDelete()
+    {
+        if (taskToDelete != null)
+        {
+            var ok = await TaskService.DeleteTaskAsync(taskToDelete.Id);
+            if (ok)
+            {
+                await LoadTasks();
+            }
+            CloseDeleteModal();
+        }
+    }
+
+    private async Task GenerateReport()
+    {
+        reportInProgress = true;
+        StateHasChanged();
+
+        try
+        {
+            var response = await Http.PostAsync("api/reporte/tareas-finalizadas", null);
+            
+            if (response.IsSuccessStatusCode)
+            {
+                // Show success message
+                Console.WriteLine("Reporte solicitado exitosamente");
+            }
+            else
+            {
+                // Show error message
+                Console.WriteLine("Error al solicitar el reporte");
+            }
+        }
+        catch (Exception ex)
+        {
+            // Handle exception
+            Console.WriteLine($"Excepción: {ex.Message}");
+        }
+        finally
+        {
+            reportInProgress = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task FilterTasks(ChangeEventArgs e)
+    {
+        selectedStatus = e.Value?.ToString();
+        await ApplyFilter();
+    }
+
+    private async Task ApplyFilter()
+    {
+        var allTasks = await TaskService.GetAllTasksAsync();
+
+        if (string.IsNullOrEmpty(selectedStatus))
+        {
+            tasks = allTasks.ToList();
+        }
+        else
+        {
+            int statusInt;
+            if (int.TryParse(selectedStatus, out statusInt))
+            {
+                tasks = allTasks.Where(x => x.Status == statusInt).ToList();
+            }
+            else
+            {
+                tasks = allTasks.ToList();
+            }
+        }
+    }
+
+    private void ClearFilter()
+    {
+        selectedStatus = "";
+        StateHasChanged();
+        _ = ApplyFilter(); 
+    }
+
+    private string GetCurrentFilterText()
+    {
+        return selectedStatus switch
+        {
+            "0" => "Pendiente",
+            "1" => "En Progreso",
+            "2" => "Completada",
+            _ => ""
+        };
+    }
+
+
+    private string GetStatusBadgeClass(int status)
+    {
+        return status switch
+        {
+            0 => "bg-warning text-dark",
+            1 => "bg-info text-white",
+            2 => "bg-success text-white",
+            _ => "bg-secondary text-white"
+        };
+    }
+
+    private string GetStatusText(int status)
+    {
+        return status switch
+        {
+            0 => "Pendiente",
+            1 => "En Progreso",
+            2 => "Completada",
+            _ => "Desconocido"
+        };
+    }
+
+    private string GetTaskRowClass(TaskItem task)
+    {
+        if (task.Status == 2) return "table-success";
+        if (IsTaskOverdue(task)) return "table-danger";
+        return "";
+    }
+
+    private string GetDueDateClass(DateTime dueDate)
+    {
+        if (dueDate < DateTime.Today) return "text-danger fw-bold";
+        if (dueDate == DateTime.Today) return "text-warning fw-bold";
+        return "text-muted";
+    }
+
+    private bool IsTaskOverdue(TaskItem task)
+    {
+        return task.DueDate < DateTime.Today && task.Status != 2;
+    }
+
+    private bool IsTaskDueToday(TaskItem task)
+    {
+        return task.DueDate.Date == DateTime.Today.Date && task.Status != 2;
+    }
+}

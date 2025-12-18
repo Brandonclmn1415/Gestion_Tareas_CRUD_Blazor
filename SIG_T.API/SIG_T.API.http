@@ -1,0 +1,6 @@
+@SIG_T.API_HostAddress = http://localhost:5161
+
+GET {{SIG_T.API_HostAddress}}/{endpoint}/
+Accept: application/json
+
+###

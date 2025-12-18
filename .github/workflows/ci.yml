@@ -1,0 +1,67 @@
+name: CI - Batería de pruebas
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  bateria-de-pruebas:
+    name: Batería de pruebas
+    runs-on: ubuntu-latest
+    services:
+      sqlserver:
+        image: mcr.microsoft.com/mssql/server:2022-latest
+        env:
+          SA_PASSWORD: Password123!
+          ACCEPT_EULA: 'Y'
+        ports:
+          - 1433:1433
+        options: >-
+          --health-cmd "/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P Password123! -Q 'SELECT 1'"
+          --health-interval=10s --health-timeout=5s --health-retries=30
+    env:
+      SIGT_TEST_CONNECTION: 'Server=localhost,1433;Database=SIGT_Database;User Id=sa;Password=Password123!;TrustServerCertificate=True;'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Install sqlcmd
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y curl apt-transport-https gnupg
+          curl https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
+          curl https://packages.microsoft.com/config/ubuntu/22.04/prod.list | sudo tee /etc/apt/sources.list.d/msprod.list
+          sudo apt-get update
+          sudo ACCEPT_EULA=Y apt-get install -y mssql-tools unixodbc-dev
+          echo 'PATH="$PATH:/opt/mssql-tools/bin"' >> $GITHUB_ENV
+
+      - name: Wait for SQL Server
+        run: |
+          for i in {1..60}; do
+            /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P Password123! -Q "SELECT 1" && break
+            echo "Waiting for SQL Server..."
+            sleep 2
+          done
+
+      - name: Create and prepare database
+        run: |
+          /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P Password123! -i Database/Scripts/01_CreateDatabase.sql
+          /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P Password123! -i Database/Scripts/02_CreateTables.sql
+          /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P Password123! -i Database/Scripts/03_CreateStored.sql
+          /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P Password123! -i Database/Scripts/04_CreateTrigger.sql
+          /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P Password123! -i Database/Scripts/05_CreateViews.sql
+          /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P Password123! -i Database/Scripts/06_SampleData.sql || true
+          /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P Password123! -i Database/Scripts/07_ReportQueue.sql || true
+
+      - name: Build solution
+        run: dotnet build SIG_T.sln --configuration Release --no-restore
+
+      - name: Run tests
+        env:
+          SIGT_TEST_CONNECTION: ${{ env.SIGT_TEST_CONNECTION }}
+        run: dotnet test SIG_T.Tests/SIG_T.Tests.csproj --no-build --verbosity normal

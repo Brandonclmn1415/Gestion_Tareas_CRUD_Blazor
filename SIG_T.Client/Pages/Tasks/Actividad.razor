@@ -1,0 +1,98 @@
+@page "/registro-actividad"
+@using SIG_T.Domain.DTO.RegistroActividad
+@using SIG_T.Domain.DTOs
+@using SIG_T.Domain.Domain.DTO.RegistroActividad
+@inject HttpClient Http
+
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="h3 fw-bold text-primary mb-1">
+                <i class="fas fa-clipboard-list me-2"></i>Registro de Actividades
+            </h2>
+            <p class="text-muted mb-0">Visualiza todas las actividades del sistema</p>
+        </div>
+    </div>
+
+    @if (registros == null)
+    {
+        <div class="card shadow-sm">
+            <div class="card-body text-center py-5">
+                <div class="spinner-border text-primary mb-3" role="status"></div>
+                <p class="text-muted">Cargando registro de actividades...</p>
+            </div>
+        </div>
+    }
+    else if (!registros.Any())
+    {
+        <div class="card shadow-sm border-0">
+            <div class="card-body text-center py-5">
+                <i class="fas fa-clipboard-list fa-3x text-muted mb-3"></i>
+                <h4 class="text-muted">No hay actividades registradas</h4>
+                <p class="text-muted">Las actividades aparecerán aquí cuando se realicen operaciones en el sistema.</p>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="card shadow-sm">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="ps-4">Tarea</th>
+                                <th>Acción</th>
+                                <th>Usuario</th>
+                                <th>Fecha</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in registros)
+                            {
+                                <tr>
+                                    <td class="ps-4">
+                                        <div class="fw-semibold text-dark">@item.TareaId</div>
+                                    </td>
+                                    <td>
+                                        <span class="badge @GetActionBadgeClass(item.Accion)">
+                                            @item.Accion
+                                        </span>
+                                    </td>
+                                    <td>@item.Usuario</td>
+                                    <td>@item.FechaRegistro.ToString("dd/MM/yyyy HH:mm")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    private List<RegistroActividadDto>? registros;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadRegistros();
+    }
+
+    private async Task LoadRegistros()
+    {
+        registros = await Http.GetFromJsonAsync<List<RegistroActividadDto>>("api/actividad");
+    }
+
+    private string GetActionBadgeClass(string accion)
+    {
+        return accion.ToUpper() switch
+        {
+            "CREATE" => "bg-success text-white",
+            "UPDATE" => "bg-info text-white",
+            "DELETE" => "bg-danger text-white",
+            "INSERT" => "bg-primary text-white",
+            _ => "bg-secondary text-white"
+        };
+    }
+}

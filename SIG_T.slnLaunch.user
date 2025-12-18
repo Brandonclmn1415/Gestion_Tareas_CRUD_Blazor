@@ -1,0 +1,15 @@
+[
+  {
+    "Name": "Nuevo perfil",
+    "Projects": [
+      {
+        "Path": "SIG_T_API\\SIG_T_API.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "SIG_T.Client\\SIG_T.Client.csproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]
